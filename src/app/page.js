@@ -1,65 +1,176 @@
-import Image from "next/image";
+import Link from "next/link";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth";
+import { getProfiles, getLikedProfileIds } from "@/services/profile.service";
+import LikeButton from "@/app/components/LikeButton";
 
-export default function Home() {
+export default async function Home() {
+  const profiles = await getProfiles();
+
+  const cookieStore = await cookies();
+
+  const token = cookieStore.get("token")?.value;
+
+  let currentUser = null;
+
+  if (token) {
+    try {
+      currentUser = verifyToken(token);
+    } catch (error) {
+      currentUser = null;
+    }
+  }
+
+  let likedIds = [];
+
+  if (currentUser) {
+    likedIds = await getLikedProfileIds(currentUser.id);
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <main className="min-h-screen bg-gray-100">
+      {/* Hero Section */}
+
+      <section
+        className="relative h-[500px] md:h-[650px] bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=2070&auto=format&fit=crop')",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/50"></div>
+
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 text-white">
+          <h1 className="text-4xl md:text-7xl font-bold mb-6">
+            Find Your Perfect Life Partner ❤️
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p className="text-lg md:text-2xl max-w-3xl mb-8">
+            Join thousands of verified profiles and start your journey towards a
+            happy marriage.
           </p>
+
+          {!currentUser && (
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/register"
+                className="bg-pink-600 hover:bg-pink-700 px-8 py-3 rounded-lg font-semibold"
+              >
+                Register Free
+              </Link>
+
+              <Link
+                href="/login"
+                className="bg-white text-black hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold"
+              >
+                Login
+              </Link>
+            </div>
+          )}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Stats Section */}
+
+      <section className="bg-white py-10 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <h3 className="text-4xl font-bold text-pink-600">10K+</h3>
+
+              <p className="text-gray-600 mt-2">Verified Profiles</p>
+            </div>
+
+            <div>
+              <h3 className="text-4xl font-bold text-pink-600">5K+</h3>
+
+              <p className="text-gray-600 mt-2">Successful Matches</p>
+            </div>
+
+            <div>
+              <h3 className="text-4xl font-bold text-pink-600">2K+</h3>
+
+              <p className="text-gray-600 mt-2">Happy Marriages</p>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+      {/* Profiles */}
+
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <h3 className="text-3xl font-bold mb-8">Latest Profiles</h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {profiles.map((profile) => (
+            <div
+              key={profile.id}
+              className="bg-white rounded-lg shadow overflow-hidden"
+            >
+              <img
+                src={
+                  profile.image_url ||
+                  "https://via.placeholder.com/500x500?text=No+Photo"
+                }
+                alt={profile.full_name}
+                className="w-full h-72 object-cover object-top"
+              />
+
+              <div className="p-4">
+                <h4 className="font-bold text-lg">{profile.full_name}</h4>
+
+                <p>Birth Place: {profile.birth_place || "N/A"}</p>
+
+                <p>Education: {profile.education || "N/A"}</p>
+
+                <p>Occupation: {profile.occupation || "N/A"}</p>
+
+                <div className="flex gap-2 mt-4">
+                  {currentUser ? (
+                    currentUser.id !== profile.id && (
+                      <LikeButton
+                        userId={profile.id}
+                        initialLiked={likedIds.includes(profile.id)}
+                      />
+                    )
+                  ) : (
+                    <Link
+                      href="/login"
+                      className="w-14 h-12 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                    >
+                      <span className="text-3xl text-gray-400">♥</span>
+                    </Link>
+                  )}
+
+                  <Link
+                    href={currentUser ? `/messages/${profile.id}` : "/login"}
+                    className="w-14 h-12 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-blue-50 transition"
+                  >
+                    <span className="text-2xl">💬</span>
+                  </Link>
+
+                  <Link
+                    href={currentUser ? `/call/${profile.id}` : "/login"}
+                    className="w-14 h-12 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-green-50 transition"
+                  >
+                    <span className="text-2xl">📞</span>
+                  </Link>
+
+                  <Link
+                    href={currentUser ? `/profile/${profile.id}` : "/login"}
+                    className="flex-1 min-w-[130px] bg-pink-600 text-white py-2 rounded-lg text-center hover:bg-pink-700"
+                  >
+                    View Profile
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {profiles.length === 0 && (
+          <div className="text-center py-10">No profiles found</div>
+        )}
+      </section>
+    </main>
   );
 }
