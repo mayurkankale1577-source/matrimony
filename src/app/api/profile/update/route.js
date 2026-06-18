@@ -22,7 +22,8 @@ export async function PUT(request) {
 
     const gender = formData.get("gender");
  
-    const birth_date = formData.get("birth_date");
+    const birth_date =
+    formData.get("birth_date") || null;
 
     const birth_place = formData.get("birth_place");
 
