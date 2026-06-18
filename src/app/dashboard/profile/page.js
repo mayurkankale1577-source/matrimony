@@ -163,54 +163,87 @@ export default function ProfilePage() {
 
       <div className="p-8">
 
-        {/* Profile Photo */}
-        <div className="flex flex-col items-center mb-10">
-          {form.image_url && !removePhoto ? (
-            <>
-              <img
-                src={form.image_url}
-                alt="Profile"
-                className="w-40 h-40 rounded-full object-cover border-4 border-pink-500 shadow-lg"
-              />
+       {/* Profile Photo */}
 
-              <button
-                type="button"
-                onClick={() => {
-                  setRemovePhoto(true);
+<div className="flex flex-col items-center mb-10">
 
-                  setForm({
-                    ...form,
-                    image_url: "",
-                  });
-                }}
-                className="mt-4 bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg"
-              >
-                Remove Photo
-              </button>
-            </>
-          ) : (
-            <div className="w-40 h-40 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-              No Photo
-            </div>
-          )}
+{form.image_url && !removePhoto ? (
+  <>
+    <div className="relative">
 
-          <div className="mt-5">
-            <label className="block text-center font-medium mb-2">
-              Change Profile Photo
-            </label>
+      <img
+        src={form.image_url}
+        alt="Profile"
+        className="w-48 h-48 rounded-full object-cover border-4 border-pink-500 shadow-xl"
+      />
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setPhoto(e.target.files[0])}
-            />
-          </div>
-        </div>
+      <label
+        htmlFor="photo-upload"
+        className="absolute bottom-2 right-2 w-12 h-12 bg-pink-600 text-white rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-pink-700 transition"
+      >
+        📷
+      </label>
 
-        <form
-          onSubmit={updateProfile}
-          className="space-y-10"
-        >
+    </div>
+
+    <h2 className="mt-4 text-2xl font-bold text-gray-800">
+      {form.full_name || "Profile"}
+    </h2>
+
+    <p className="text-gray-500 mb-4">
+      Matrimony Profile
+    </p>
+
+    <button
+      type="button"
+      onClick={() => {
+        setRemovePhoto(true);
+
+        setForm({
+          ...form,
+          image_url: "",
+        });
+      }}
+      className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg"
+    >
+      फोटो काढून टाका
+    </button>
+  </>
+) : (
+  <>
+    <div className="w-48 h-48 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 border-4 border-pink-300">
+      No Photo
+    </div>
+
+    <label
+      htmlFor="photo-upload"
+      className="mt-4 bg-pink-600 hover:bg-pink-700 text-white px-5 py-2 rounded-lg cursor-pointer"
+    >
+      फोटो अपलोड करा
+    </label>
+  </>
+)}
+
+<input
+  id="photo-upload"
+  type="file"
+  accept="image/*"
+  className="hidden"
+  onChange={(e) => setPhoto(e.target.files[0])}
+/>
+
+{photo && (
+  <p className="mt-3 text-sm text-gray-600">
+    निवडलेली फाइल: {photo.name}
+  </p>
+)}
+
+</div>
+
+<form
+onSubmit={updateProfile}
+className="space-y-10"
+>
          {/* Personal Information */}
 
 <div>
