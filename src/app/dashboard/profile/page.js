@@ -150,294 +150,444 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <div className="bg-white rounded-xl shadow p-6">
-        <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+  <div className="min-h-screen bg-gray-100 py-10 px-4">
+    <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+      
+      {/* Header */}
+      <div className="bg-gradient-to-r from-pink-600 to-purple-600 p-8 text-white text-center">
+        <h1 className="text-4xl font-bold">My Profile</h1>
+        <p className="mt-2 text-pink-100">
+          Complete your matrimony profile
+        </p>
+      </div>
 
-        {form.image_url && !removePhoto && (
-          <div className="mb-6">
-            <img
-              src={form.image_url}
-              alt="Profile"
-              className="w-40 h-40 object-cover rounded-lg border"
+      <div className="p-8">
+
+        {/* Profile Photo */}
+        <div className="flex flex-col items-center mb-10">
+          {form.image_url && !removePhoto ? (
+            <>
+              <img
+                src={form.image_url}
+                alt="Profile"
+                className="w-40 h-40 rounded-full object-cover border-4 border-pink-500 shadow-lg"
+              />
+
+              <button
+                type="button"
+                onClick={() => {
+                  setRemovePhoto(true);
+
+                  setForm({
+                    ...form,
+                    image_url: "",
+                  });
+                }}
+                className="mt-4 bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg"
+              >
+                Remove Photo
+              </button>
+            </>
+          ) : (
+            <div className="w-40 h-40 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+              No Photo
+            </div>
+          )}
+
+          <div className="mt-5">
+            <label className="block text-center font-medium mb-2">
+              Change Profile Photo
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setPhoto(e.target.files[0])}
             />
-            <button
-              type="button"
-              onClick={() => {
-                setRemovePhoto(true);
-
-                setForm({
-                  ...form,
-                  image_url: "",
-                });
-              }}
-              className="mt-2 bg-red-500 text-white px-4 py-2 rounded"
-            >
-              Remove Photo
-            </button>
           </div>
-        )}
-
-        <div className="mb-6">
-          <label className="block mb-2 font-medium">Change Profile Photo</label>
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setPhoto(e.target.files[0])}
-          />
         </div>
 
-        <form onSubmit={updateProfile} className="grid md:grid-cols-2 gap-4">
-          <div className="border p-3 rounded bg-gray-50"> नाव</div>
+        <form
+          onSubmit={updateProfile}
+          className="space-y-10"
+        >
+         {/* Personal Information */}
 
-          <input
-            name="full_name"
-            value={form.full_name}
-            onChange={handleChange}
-            placeholder="पूर्ण नाव"
-            className="border p-3 rounded"
-          />
+<div>
+  <h2 className="text-2xl font-bold text-pink-600 border-b-2 border-pink-500 pb-2 mb-6">
+    वैयक्तिक माहिती
+  </h2>
 
-          <div className="border p-3 rounded bg-gray-50"> जन्म तारीख</div>
+  <div className="grid md:grid-cols-2 gap-5">
 
-          <input
-            type="date"
-            name="birth_date"
-            value={form.birth_date}
-            onChange={handleChange}
-            placeholder="जन्म तारीख"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        पूर्ण नाव
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50"> जन्म स्थळ</div>
+      <input
+        name="full_name"
+        value={form.full_name}
+        onChange={handleChange}
+        placeholder="पूर्ण नाव"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <input
-            name="birth_place"
-            value={form.birth_place}
-            onChange={handleChange}
-            placeholder="जन्म स्थळ"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        जन्म तारीख
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50"> जात</div>
+      <input
+        type="date"
+        name="birth_date"
+        value={form.birth_date}
+        onChange={handleChange}
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <input
-            name="religion"
-            value={form.religion}
-            onChange={handleChange}
-            placeholder="  जात"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        जन्म स्थळ
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">शिक्षण</div>
+      <input
+        name="birth_place"
+        value={form.birth_place}
+        onChange={handleChange}
+        placeholder="जन्म स्थळ"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <input
-            name="education"
-            value={form.education}
-            onChange={handleChange}
-            placeholder="शिक्षण"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        जात
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">कुळदेवत</div>
+      <input
+        name="religion"
+        value={form.religion}
+        onChange={handleChange}
+        placeholder="जात"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <input
-            name="mother_tongue"
-            value={form.mother_tongue}
-            onChange={handleChange}
-            placeholder="कुळदेवताचे नाव"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        शिक्षण
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">उंची</div>
+      <input
+        name="education"
+        value={form.education}
+        onChange={handleChange}
+        placeholder="शिक्षण"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <input
-            name="height"
-            value={form.height}
-            onChange={handleChange}
-            placeholder="उंची"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        कुळदेवत
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">नोकरी/व्यवसाय</div>
+      <input
+        name="mother_tongue"
+        value={form.mother_tongue}
+        onChange={handleChange}
+        placeholder="कुळदेवत"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <input
-            name="occupation"
-            value={form.occupation}
-            onChange={handleChange}
-            placeholder="कंपनी / व्यवसाय"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        उंची
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">वेतन/उत्पन्न</div>
+      <input
+        name="height"
+        value={form.height}
+        onChange={handleChange}
+        placeholder="उंची"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <input
-            name="annual_income"
-            value={form.annual_income}
-            onChange={handleChange}
-            placeholder="वार्षिक उत्पन्न"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        नोकरी / व्यवसाय
+      </label>
 
-          {/* Family Information */}
+      <input
+        name="occupation"
+        value={form.occupation}
+        onChange={handleChange}
+        placeholder="नोकरी / व्यवसाय"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <div className="border p-3 rounded bg-gray-50">वडिलांचे नाव</div>
+    <div>
+      <label className="font-medium block mb-2">
+        वार्षिक उत्पन्न
+      </label>
 
-          <textarea
-            name="father_name"
-            value={form.father_name}
-            onChange={handleChange}
-            rows={4}
-            placeholder="वडिलांचे संपूर्ण नाव, पत्ता, व्यवसाय, इतर माहिती"
-            className="border p-3 rounded"
-          />
+      <input
+        name="annual_income"
+        value={form.annual_income}
+        onChange={handleChange}
+        placeholder="वार्षिक उत्पन्न"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <div className="border p-3 rounded bg-gray-50">वडिलांचा व्यवसाय</div>
+    <div>
+      <label className="font-medium block mb-2">
+        लिंग
+      </label>
 
-          <textarea
-            name="father_occupation"
-            value={form.father_occupation}
-            onChange={handleChange}
-            rows={3}
-            placeholder="वडिलांचा व्यवसाय / नोकरी"
-            className="border p-3 rounded"
-          />
-          <div className="border p-3 rounded bg-gray-50">मोठे बाबा</div>
+      <select
+        name="gender"
+        value={form.gender}
+        onChange={handleChange}
+        className="w-full border rounded-lg p-3"
+      >
+        <option value="">
+          लिंग निवडा
+        </option>
 
-          <textarea
-            name="mothe_baba"
-            value={form.mothe_baba}
-            onChange={handleChange}
-            rows={4}
-            placeholder="मोठे बाबा यांची माहिती"
-            className="border p-3 rounded"
-          />
-          <div className="border p-3 rounded bg-gray-50">काका</div>
+        <option value="male">
+          पुरुष
+        </option>
 
-          <textarea
-            name="kaka_name"
-            value={form.kaka_name}
-            onChange={handleChange}
-            rows={4}
-            placeholder="काका चे नाव, पत्ता, माहिती"
-            className="border p-3 rounded"
-          />
-          <div className="border p-3 rounded bg-gray-50">आईचे नाव</div>
+        <option value="female">
+          महिला
+        </option>
+      </select>
+    </div>
 
-          <input
-            name="mother_name"
-            value={form.mother_name}
-            onChange={handleChange}
-            placeholder="आईचे संपूर्ण नाव"
-            className="border p-3 rounded"
-          />
-          <div className="border p-3 rounded bg-gray-50">मावशी</div>
+  </div>
+</div>
 
-          <textarea
-            name="mavshi"
-            value={form.mavshi}
-            onChange={handleChange}
-            rows={4}
-            placeholder="मावशी यांची माहिती"
-            className="border p-3 rounded"
-          />
-          <div className="border p-3 rounded bg-gray-50">आत्तेमामा</div>
+         {/* Family Information */}
 
-          <textarea
-            name="aatemama"
-            value={form.aatemama}
-            onChange={handleChange}
-            rows={4}
-            placeholder="आत्तेमामा यांची माहिती"
-            className="border p-3 rounded"
-          />
+<div>
+  <h2 className="text-2xl font-bold text-pink-600 border-b-2 border-pink-500 pb-2 mb-6">
+    कौटुंबिक माहिती
+  </h2>
 
-          <div className="border p-3 rounded bg-gray-50">बहीण</div>
+  <div className="grid md:grid-cols-2 gap-5">
 
-          <textarea
-            name="sisters"
-            value={form.sisters}
-            onChange={handleChange}
-            rows={3}
-            placeholder="बहिणींची संख्या, नाव, शिक्षण इ."
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        वडिलांचे नाव
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">भाऊ</div>
+      <textarea
+        name="father_name"
+        value={form.father_name}
+        onChange={handleChange}
+        rows={4}
+        placeholder="वडिलांचे संपूर्ण नाव, पत्ता, व्यवसाय"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <textarea
-            name="brothers"
-            value={form.brothers}
-            onChange={handleChange}
-            rows={3}
-            placeholder="भावांची संख्या, नाव, व्यवसाय इ."
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        वडिलांचा व्यवसाय
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">मामा</div>
+      <textarea
+        name="father_occupation"
+        value={form.father_occupation}
+        onChange={handleChange}
+        rows={4}
+        placeholder="वडिलांचा व्यवसाय"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <textarea
-            name="maternal_uncle"
-            value={form.maternal_uncle}
-            onChange={handleChange}
-            rows={3}
-            placeholder="मामाचे नाव व माहिती"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        मोठे बाबा
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">नातेवाईक</div>
+      <textarea
+        name="mothe_baba"
+        value={form.mothe_baba}
+        onChange={handleChange}
+        rows={4}
+        placeholder="मोठे बाबा यांची माहिती"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <textarea
-            name="relatives"
-            value={form.relatives}
-            onChange={handleChange}
-            rows={4}
-            placeholder="नातेवाईकांची माहिती"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        काका
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">अपेक्षा</div>
+      <textarea
+        name="kaka_name"
+        value={form.kaka_name}
+        onChange={handleChange}
+        rows={4}
+        placeholder="काका यांची माहिती"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <textarea
-            name="partner_preference"
-            value={form.partner_preference}
-            onChange={handleChange}
-            rows={5}
-            placeholder="वधू/वर बद्दल अपेक्षा"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        आईचे नाव
+      </label>
 
-          <div className="border p-3 rounded bg-gray-50">संपर्क</div>
+      <input
+        name="mother_name"
+        value={form.mother_name}
+        onChange={handleChange}
+        placeholder="आईचे नाव"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
-          <textarea
-            name="address"
-            value={form.address}
-            onChange={handleChange}
-            rows={4}
-            placeholder="संपर्क"
-            className="border p-3 rounded"
-          />
+    <div>
+      <label className="font-medium block mb-2">
+        मावशी
+      </label>
 
-          <select
-            name="gender"
-            value={form.gender}
-            onChange={handleChange}
-            className="border p-3 rounded"
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
+      <textarea
+        name="mavshi"
+        value={form.mavshi}
+        onChange={handleChange}
+        rows={4}
+        placeholder="मावशी यांची माहिती"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
 
+    <div>
+      <label className="font-medium block mb-2">
+        आत्तेमामा
+      </label>
+
+      <textarea
+        name="aatemama"
+        value={form.aatemama}
+        onChange={handleChange}
+        rows={4}
+        placeholder="आत्तेमामा यांची माहिती"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
+
+    <div>
+      <label className="font-medium block mb-2">
+        बहिण
+      </label>
+
+      <textarea
+        name="sisters"
+        value={form.sisters}
+        onChange={handleChange}
+        rows={4}
+        placeholder="बहिणींची माहिती"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
+
+    <div>
+      <label className="font-medium block mb-2">
+        भाऊ
+      </label>
+
+      <textarea
+        name="brothers"
+        value={form.brothers}
+        onChange={handleChange}
+        rows={4}
+        placeholder="भावांची माहिती"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
+
+    <div>
+      <label className="font-medium block mb-2">
+        मामा
+      </label>
+
+      <textarea
+        name="maternal_uncle"
+        value={form.maternal_uncle}
+        onChange={handleChange}
+        rows={4}
+        placeholder="मामांची माहिती"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
+
+  </div>
+</div>
+
+{/* Partner Preference */}
+
+<div>
+  <h2 className="text-2xl font-bold text-pink-600 border-b-2 border-pink-500 pb-2 mb-6">
+    वधू / वर अपेक्षा
+  </h2>
+
+  <div>
+    <label className="font-medium block mb-2">
+      अपेक्षित जोडीदाराबद्दल माहिती
+    </label>
+
+    <textarea
+      name="partner_preference"
+      value={form.partner_preference}
+      onChange={handleChange}
+      rows={6}
+      placeholder="उंची, शिक्षण, व्यवसाय, कुटुंब, स्वभाव व इतर अपेक्षा लिहा..."
+      className="w-full border rounded-lg p-3"
+    />
+  </div>
+</div>
+{/* Contact Information */}
+
+<div>
+  <h2 className="text-2xl font-bold text-pink-600 border-b-2 border-pink-500 pb-2 mb-6">
+    संपर्क माहिती
+  </h2>
+
+  <div>
+    <label className="font-medium block mb-2">
+      पत्ता व संपर्क
+    </label>
+
+    <textarea
+      name="address"
+      value={form.address}
+      onChange={handleChange}
+      rows={5}
+      placeholder="संपूर्ण पत्ता, मोबाईल क्रमांक व इतर संपर्क माहिती"
+      className="w-full border rounded-lg p-3"
+    />
+  </div>
+</div>
           <button
             type="submit"
-            className="bg-pink-600 text-white py-3 rounded md:col-span-2"
+            className="w-full bg-pink-600 hover:bg-pink-700 text-white py-4 rounded-xl font-semibold text-lg"
           >
-            Update Profile
+              प्रोफाइल अपडेट करा
           </button>
         </form>
       </div>
     </div>
-  );
+  </div>
+);
 }

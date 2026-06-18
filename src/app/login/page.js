@@ -34,42 +34,75 @@ if (res.ok) {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center">
-      <form
-        onSubmit={loginUser}
-        className="border p-6 rounded w-96"
-      >
-        <h1 className="text-3xl font-bold mb-5">
-          Login
-        </h1>
-
-        <input
-          type="email"
-          placeholder="Email"
-          className="border w-full p-2 mb-3"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          className="border w-full p-2 mb-3"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-        />
-
-        <button
-          type="submit"
-          className="bg-black text-white px-4 py-2 rounded"
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-600">
+      <div className="w-full max-w-md">
+        <form
+          onSubmit={loginUser}
+          className="bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl p-8"
         >
-          Login
-        </button>
-      </form>
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-pink-600">
+              Matrimony
+            </h1>
+  
+            <p className="text-gray-500 mt-2">
+              Welcome Back ❤️
+            </p>
+          </div>
+  
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-700 font-medium">
+              Email
+            </label>
+  
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+            />
+          </div>
+  
+          <div className="mb-6">
+            <label className="block mb-2 text-gray-700 font-medium">
+              Password
+            </label>
+  
+            <input
+              type="password"
+              placeholder="Enter your password"
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+            />
+          </div>
+  
+          <button
+            type="submit"
+            className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-lg font-semibold transition"
+          >
+            Login
+          </button>
+  
+          <div className="text-center mt-5">
+            <p className="text-gray-600">
+              Don't have an account?
+            </p>
+  
+            <a
+              href="/register"
+              className="text-pink-600 font-semibold hover:underline"
+            >
+              Register Now
+            </a>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
