@@ -5,7 +5,13 @@ import { getProfiles, getLikedProfileIds } from "@/services/profile.service";
 import LikeButton from "@/app/components/LikeButton";
 
 export default async function Home() {
-  const profiles = await getProfiles();
+  let profiles = [];
+
+  try {
+    profiles = await getProfiles();
+  } catch (error) {
+    console.error("Profiles Error:", error);
+  }
 
   const cookieStore = await cookies();
 
@@ -23,9 +29,13 @@ export default async function Home() {
 
   let likedIds = [];
 
-  if (currentUser) {
+if (currentUser) {
+  try {
     likedIds = await getLikedProfileIds(currentUser.id);
+  } catch (error) {
+    console.error("Likes Error:", error);
   }
+}
 
   return (
     <main className="min-h-screen bg-gray-100">
