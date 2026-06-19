@@ -15,17 +15,24 @@ export default async function Home() {
 
   const cookieStore = await cookies();
 
-  const token = cookieStore.get("token")?.value;
+const token =
+  cookieStore.get("token")?.value;
 
-  let currentUser = null;
+let currentUser = null;
 
-  if (token) {
-    try {
-      currentUser = verifyToken(token);
-    } catch (error) {
-      currentUser = null;
-    }
+if (token) {
+  try {
+    currentUser =
+      verifyToken(token);
+  } catch (error) {
+    console.error(
+      "Token Error:",
+      error
+    );
+
+    currentUser = null;
   }
+}
 
   let likedIds = [];
 
@@ -151,12 +158,16 @@ if (currentUser) {
                     </Link>
                   )}
 
-                  <Link
-                    href={`/dashboard/messages/${profile.id}`}
-                    className="w-14 h-12 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-blue-50 transition"
-                  >
-                    <span className="text-2xl">💬</span>
-                  </Link>
+<Link
+  href={
+    currentUser
+      ? `/dashboard/messages/${profile.id}`
+      : "/login"
+  }
+  className="w-14 h-12 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-blue-50 transition"
+>
+  <span className="text-2xl">💬</span>
+</Link>
 
                   <Link
                     href={currentUser ? `/call/${profile.id}` : "/login"}
@@ -178,8 +189,16 @@ if (currentUser) {
         </div>
 
         {profiles.length === 0 && (
-          <div className="text-center py-10">No profiles found</div>
-        )}
+  <div className="text-center py-10 bg-white rounded-lg shadow">
+    <h3 className="text-xl font-semibold">
+      Profiles unavailable
+    </h3>
+
+    <p className="text-gray-500 mt-2">
+      Please try again later.
+    </p>
+  </div>
+)}
       </section>
     </main>
   );

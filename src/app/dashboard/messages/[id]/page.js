@@ -12,116 +12,158 @@ import {
   export default async function ChatPage({
     params,
   }) {
-    const { id } = await params;
+    try {
+      const { id } = await params;
   
-    const cookieStore = await cookies();
+      const cookieStore =
+        await cookies();
   
-    const token =
-      cookieStore.get("token")?.value;
+      const token =
+        cookieStore.get("token")?.value;
   
-    const currentUser =
-      verifyToken(token);
+      if (!token) {
+        return (
+          <div className="p-10 text-center">
+            Please Login
+          </div>
+        );
+      }
   
-    await markMessagesSeen(
-      currentUser.id,
-      Number(id)
-    );
+      let currentUser;
   
-    const messages =
-      await getMessages(
+      try {
+        currentUser =
+          verifyToken(token);
+      } catch {
+        return (
+          <div className="p-10 text-center">
+            Invalid Session
+          </div>
+        );
+      }
+  
+      await markMessagesSeen(
         currentUser.id,
         Number(id)
       );
   
-    const otherUser =
-      await getUserById(
-        Number(id)
-      );
+      const messages =
+        await getMessages(
+          currentUser.id,
+          Number(id)
+        );
   
-    return (
-      <div className="max-w-5xl mx-auto p-4 md:p-6">
+      const otherUser =
+        await getUserById(
+          Number(id)
+        );
   
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-[80vh] flex flex-col">
+      return (
+        <div className="max-w-5xl mx-auto p-4 md:p-6">
   
-          {/* Header */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-[80vh] flex flex-col">
   
-          <div className="bg-pink-600 text-white px-5 py-4 flex items-center gap-4">
+            {/* Header */}
   
-            <Link
-              href="/dashboard/messages"
-              className="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg"
-            >
-              ← Back
-            </Link>
+            <div className="bg-pink-600 text-white px-5 py-4 flex items-center gap-4">
   
-            <div>
-              <h1 className="font-bold text-xl">
-                {otherUser?.full_name}
-              </h1>
+              <Link
+                href="/dashboard/messages"
+                className="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg"
+              >
+                ← Back
+              </Link>
   
-              <p className="text-sm text-pink-100">
-                Matrimony Messages
-              </p>
-            </div>
+              <div>
+                <h1 className="font-bold text-xl">
+                  {otherUser?.full_name ||
+                    "User"}
+                </h1>
   
-          </div>
-  
-          {/* Messages */}
-  
-          <div className="flex-1 overflow-y-auto bg-gray-100 p-5">
-  
-            {messages.length === 0 && (
-              <div className="h-full flex items-center justify-center text-gray-500">
-                Start your conversation 💬
+                <p className="text-sm text-pink-100">
+                  Matrimony Messages
+                </p>
               </div>
-            )}
-  
-            <div className="space-y-3">
-  
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={
-                    msg.sender_id ===
-                    currentUser.id
-                      ? "flex justify-end"
-                      : "flex justify-start"
-                  }
-                >
-                 <div
-  className={
-    msg.sender_id ===
-    currentUser.id
-      ? "max-w-[75%] bg-pink-600 text-white px-4 py-3 rounded-2xl rounded-br-md shadow"
-      : "max-w-[75%] bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-bl-md shadow"
-  }
->
-  <div>
-    {msg.message}
-  </div>
-
-  {msg.sender_id ===
-    currentUser.id && (
-    <div className="text-xs mt-1 text-right opacity-80">
-      {msg.is_seen
-        ? "✓✓ Seen"
-        : "✓ Sent"}
-    </div>
-  )}
-</div>
-                </div>
-              ))}
   
             </div>
   
-          </div>
+            {/* Messages */}
   
-          <ChatBox
-            receiverId={Number(id)}
-          />
+            <div className="flex-1 overflow-y-auto bg-gray-100 p-5">
+  
+              {messages.length ===
+                0 && (
+                <div className="h-full flex items-center justify-center text-gray-500">
+                  Start your
+                  conversation 💬
+                </div>
+              )}
+  
+              <div className="space-y-3">
+  
+                {messages.map(
+                  (msg) => (
+                    <div
+                      key={msg.id}
+                      className={
+                        msg.sender_id ===
+                        currentUser.id
+                          ? "flex justify-end"
+                          : "flex justify-start"
+                      }
+                    >
+                      <div
+                        className={
+                          msg.sender_id ===
+                          currentUser.id
+                            ? "max-w-[75%] bg-pink-600 text-white px-4 py-3 rounded-2xl rounded-br-md shadow"
+                            : "max-w-[75%] bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-bl-md shadow"
+                        }
+                      >
+                        <div>
+                          {
+                            msg.message
+                          }
+                        </div>
+  
+                        {msg.sender_id ===
+                          currentUser.id && (
+                          <div className="text-xs mt-1 text-right opacity-80">
+                            {msg.is_seen
+                              ? "✓✓ Seen"
+                              : "✓ Sent"}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                )}
+  
+              </div>
+  
+            </div>
+  
+            <ChatBox
+              receiverId={Number(
+                id
+              )}
+            />
+  
+          </div>
   
         </div>
+      );
+    } catch (error) {
+      console.error(
+        "Chat Page Error:",
+        error
+      );
   
-      </div>
-    );
+      return (
+        <div className="p-10 text-center">
+          Something went wrong.
+          Please try again later.
+        </div>
+      );
+    }
   }

@@ -6,6 +6,17 @@ import db from "@/lib/db";
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
+    if (!email || !password) {
+      return NextResponse.json(
+        {
+          message:
+            "Email and Password required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     const [users] = await db.query(
       "SELECT * FROM users WHERE email = ?",
@@ -26,13 +37,26 @@ export async function POST(req) {
       user.password
     );
 
+
+
     if (!isMatch) {
       return NextResponse.json(
         { message: "Invalid Password" },
         { status: 401 }
       );
     }
-
+    
+    if (!process.env.JWT_SECRET) {
+      return NextResponse.json(
+        {
+          message: "JWT Secret Missing",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+    
     const token = jwt.sign(
       {
         id: user.id,
@@ -52,13 +76,20 @@ export async function POST(req) {
 
     response.cookies.set("token", token, {
       httpOnly: true,
+      secure:
+        process.env.NODE_ENV ===
+        "production",
+      sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
 
     return response;
   } catch (error) {
-    console.log(error);
+    console.error(
+      "Login Error:",
+      error
+    );
 
     return NextResponse.json(
       { message: "Server Error" },

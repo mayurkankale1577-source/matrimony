@@ -13,17 +13,41 @@ export async function PUT(request) {
     if (!token) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+    let user;
 
-    const user = verifyToken(token);
+    try {
+      user = verifyToken(token);
+    } catch (error) {
+      return NextResponse.json(
+        {
+          message: "Invalid Token",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
 
-    const formData = await request.formData();
+    let formData;
+
+    try {
+      formData = await request.formData();
+    } catch (error) {
+      return NextResponse.json(
+        {
+          message: "Invalid Form Data",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     const full_name = formData.get("full_name");
 
     const gender = formData.get("gender");
- 
-    const birth_date =
-    formData.get("birth_date") || null;
+
+    const birth_date = formData.get("birth_date") || null;
 
     const birth_place = formData.get("birth_place");
 
@@ -37,11 +61,7 @@ export async function PUT(request) {
 
     const height = formData.get("height");
 
-    
-
     const mother_tongue = formData.get("mother_tongue");
-
-   
 
     const annual_income = formData.get("annual_income");
 
@@ -72,22 +92,34 @@ export async function PUT(request) {
     const address = formData.get("address");
 
     const mobile = formData.get("mobile");
- 
 
     const email = formData.get("email");
 
     // UPDATE USER
 
-    await db.query(
-      `
-      UPDATE users
-      SET
-        full_name = ?,
-        gender = ?
-      WHERE id = ?
-      `,
-      [full_name, gender, user.id]
-    );
+    try {
+      await db.query(
+        `
+        UPDATE users
+        SET
+          full_name = ?,
+          gender = ?
+        WHERE id = ?
+        `,
+        [full_name, gender, user.id]
+      );
+    } catch (error) {
+      console.error("User Update Error:", error);
+
+      return NextResponse.json(
+        {
+          message: "Failed to update user",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
 
     // PROFILE EXISTS?
 
@@ -152,7 +184,7 @@ VALUES
         `,
         [
           user.id,
-         
+
           birth_date,
           birth_place,
           religion,
@@ -160,27 +192,27 @@ VALUES
           occupation,
           about_me,
           height,
-          
+
           mother_tongue,
-         
+
           annual_income,
           partner_preference,
-        
+
           father_name,
           father_occupation,
           mother_name,
-        
+
           brothers,
           sisters,
-        
+
           maternal_uncle,
           relatives,
-        
+
           address,
           mobile,
-           
+
           email,
-        
+
           kaka_name,
           mothe_baba,
           mavshi,
@@ -228,7 +260,6 @@ aatemama = ?,
 WHERE user_id = ?
         `,
         [
-        
           birth_date,
           birth_place,
           religion,
@@ -236,17 +267,17 @@ WHERE user_id = ?
           occupation,
           about_me,
           height,
-        
+
           mother_tongue,
-         
+
           annual_income,
           partner_preference,
 
           father_name,
           kaka_name,
-mothe_baba,
-mavshi,
-aatemama,
+          mothe_baba,
+          mavshi,
+          aatemama,
           father_occupation,
           mother_name,
 
@@ -258,7 +289,7 @@ aatemama,
 
           address,
           mobile,
-          
+
           email,
 
           user.id,
@@ -292,9 +323,24 @@ aatemama,
 
       const base64 = `data:${photo.type};base64,${buffer.toString("base64")}`;
 
-      const result = await cloudinary.uploader.upload(base64, {
-        folder: "matrimony",
-      });
+      let result;
+
+      try {
+        result = await cloudinary.uploader.upload(base64, {
+          folder: "matrimony",
+        });
+      } catch (error) {
+        console.error("Cloudinary Error:", error);
+
+        return NextResponse.json(
+          {
+            message: "Photo upload failed",
+          },
+          {
+            status: 500,
+          }
+        );
+      }
 
       const [existingPhoto] = await db.query(
         `

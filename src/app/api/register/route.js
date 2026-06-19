@@ -4,72 +4,54 @@ import db from "@/lib/db";
 
 export async function POST(request) {
   try {
-    const {
-      full_name,
-      gender,
-      email,
-      password,
-    } = await request.json();
+    const { full_name, gender, email, password } = await request.json();
 
-    if (
-      !full_name ||
-      !gender ||
-      !email ||
-      !password
-    ) {
+    const normalizedEmail = email?.trim().toLowerCase();
+
+    if (!full_name || !gender || !email || !password) {
       return NextResponse.json(
         {
-          message:
-            "All fields are required",
+          message: "All fields are required",
         },
         { status: 400 }
       );
     }
 
-    const [existing] =
-      await db.query(
-        `
+    const [existing] = await db.query(
+      `
         SELECT id
         FROM users
         WHERE email = ?
         `,
-        [email]
-      );
+      [normalizedEmail]
+    );
 
     if (existing.length > 0) {
       return NextResponse.json(
         {
-          message:
-            "Email already exists",
+          message: "Email already exists",
         },
         { status: 400 }
       );
     }
 
-    const hashedPassword =
-      await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create User
-    const [result] =
-      await db.query(
-        `
+    const [result] = await db.query(
+      `
         INSERT INTO users
-        (
-          full_name,
-          gender,
-          email,
-          password
-        )
+(
+  full_name,
+  gender,
+  email,
+  password
+)
         VALUES
         (?, ?, ?, ?)
         `,
-        [
-          full_name,
-          gender,
-          email,
-          hashedPassword,
-        ]
-      );
+      [full_name, gender, normalizedEmail, hashedPassword]
+    );
 
     // Create Empty Profile Row
     await db.query(
@@ -86,11 +68,10 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      message:
-        "User registered successfully",
+      message: "User registered successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Register Error:", error);
 
     return NextResponse.json(
       {

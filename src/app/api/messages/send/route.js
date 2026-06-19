@@ -21,25 +21,81 @@ export async function POST(request) {
       );
     }
 
-    const user = verifyToken(token);
+    let user;
+
+    try {
+      user = verifyToken(token);
+    } catch (error) {
+      return NextResponse.json(
+        {
+          message: "Invalid Token",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
 
     const {
       receiverId,
       message,
     } = await request.json();
 
-    await sendMessage(
-      user.id,
-      receiverId,
-      message
-    );
+    if (!receiverId) {
+      return NextResponse.json(
+        {
+          message:
+            "Receiver is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (
+      !message ||
+      !message.trim()
+    ) {
+      return NextResponse.json(
+        {
+          message:
+            "Message is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const result =
+      await sendMessage(
+        user.id,
+        Number(receiverId),
+        message.trim()
+      );
+
+    if (!result) {
+      return NextResponse.json(
+        {
+          message:
+            "Failed to send message",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       message: "Message sent",
     });
   } catch (error) {
-    console.log(error);
+    console.error(
+      "Send Message API Error:",
+      error
+    );
 
     return NextResponse.json(
       {
