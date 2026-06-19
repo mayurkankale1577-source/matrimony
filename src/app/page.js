@@ -152,7 +152,7 @@ if (currentUser) {
                   )}
 
                   <Link
-                    href={currentUser ? `/messages/${profile.id}` : "/login"}
+                    href={`/dashboard/messages/${profile.id}`}
                     className="w-14 h-12 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-blue-50 transition"
                   >
                     <span className="text-2xl">💬</span>
