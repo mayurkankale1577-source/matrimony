@@ -50,17 +50,17 @@ export default async function Dashboard() {
               </Link>
 
               <Link
+                href="/dashboard/premium"
+                className="p-3 rounded bg-pink-50 hover:bg-pink-100"
+              >
+                🔒 Premium
+              </Link>
+
+              <Link
                 href="/dashboard/profile"
                 className="p-3 rounded bg-pink-50 hover:bg-pink-100"
               >
                 👤 My Profile
-              </Link>
-
-              <Link
-                href="/dashboard/profile/edit"
-                className="p-3 rounded bg-pink-50 hover:bg-pink-100"
-              >
-                ✏️ Edit Profile
               </Link>
 
               <Link

@@ -1,3 +1,6 @@
+
+import db from "@/lib/db";
+import { redirect } from "next/navigation";
 import {
     getMessages,
     markMessagesSeen,
@@ -34,6 +37,18 @@ import {
       try {
         currentUser =
           verifyToken(token);
+          const [userRows] = await db.query(
+            `
+            SELECT is_premium
+            FROM users
+            WHERE id = ?
+            `,
+            [currentUser.id]
+          );
+          
+          if (!userRows[0]?.is_premium) {
+            redirect("/dashboard/premium");
+          }
       } catch {
         return (
           <div className="p-10 text-center">
