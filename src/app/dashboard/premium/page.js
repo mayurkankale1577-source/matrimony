@@ -70,7 +70,7 @@ return ( <div className="max-w-4xl mx-auto p-6"> <div className="bg-white rounde
 
     <div className="mt-6 flex justify-center">
       <a
-        href="https://wa.me/919999999999"
+        href="https://wa.me/9356882028"
         target="_blank"
         className="bg-green-600 text-white px-8 py-3 rounded-lg"
       >
