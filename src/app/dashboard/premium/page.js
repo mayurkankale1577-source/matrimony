@@ -68,7 +68,7 @@ export default function PremiumPage() {
         {/* Direct UPI Payment Button */}
         <div className="mt-6 flex justify-center">
         <a
-  href="upi://pay?pa=mayurkankale15-3@oksbi&pn=Matrimony&am=200&cu=INR"
+  href="upi://pay?pa=mayurkankale15-2@okaxis&pn=Matrimony&am=200&cu=INR"
   className="bg-blue-600 text-white px-8 py-3 rounded-lg"
 >
   Pay ₹200 Now
