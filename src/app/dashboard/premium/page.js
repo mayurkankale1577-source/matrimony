@@ -95,12 +95,12 @@ export default function PremiumPage() {
 
         <div className="mt-6 flex justify-center">
 
-          <a
-            href="upi://pay?pa=mayurkankale15-2@okaxis&pn=Matrimony&am=200&cu=INR&tn=Premium Membership"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold"
-          >
-            Pay ₹200 Now
-          </a>
+        <a
+  href="upi://pay?pa=mayurkankale15-2@okaxis&pn=Matrimony&cu=INR&tn=Premium Membership"
+  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold"
+>
+  Pay with UPI
+</a>
 
         </div>
 
