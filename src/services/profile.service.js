@@ -31,50 +31,67 @@ export async function getProfiles() {
   }
 }
 
-export async function getProfileById(
-  id
-) {
+export async function getProfileById(id) {
   try {
-    const [rows] =
-      await db.query(
-        `
-        SELECT
-          users.id,
-          users.full_name,
-          users.gender,
-          profiles.religion,
-          profiles.education,
-          profiles.occupation,
-          profiles.about_me,
-          profiles.height,
-          profiles.annual_income,
-          profiles.partner_preference,
-          photos.image_url
+    const [rows] = await db.query(
+      `
+      SELECT
+        users.id,
+        users.full_name AS user_full_name,
+        users.gender,
 
-        FROM users
+        profiles.full_name,
+        profiles.birth_date,
+        profiles.birth_place,
+        profiles.religion,
+        profiles.education,
+        profiles.occupation,
+        profiles.about_me,
+        profiles.height,
+        profiles.mother_tongue,
+        profiles.annual_income,
+        profiles.partner_preference,
 
-        LEFT JOIN profiles
-          ON users.id = profiles.user_id
+        profiles.father_name,
+        profiles.father_occupation,
+        profiles.mother_name,
 
-        LEFT JOIN photos
-          ON users.id = photos.user_id
+        profiles.mobile,
+        profiles.email,
+        profiles.address,
 
-        WHERE users.id = ?
-        `,
-        [id]
-      );
+        profiles.brothers,
+        profiles.sisters,
+        profiles.maternal_uncle,
+        profiles.relatives,
+
+        profiles.kaka_name,
+        profiles.mothe_baba,
+        profiles.mavshi,
+        profiles.aatemama,
+
+        photos.image_url
+
+      FROM users
+
+      LEFT JOIN profiles
+      ON users.id = profiles.user_id
+
+      LEFT JOIN photos
+      ON users.id = photos.user_id
+      AND photos.is_primary = 1
+
+      WHERE users.id = ?
+      `,
+      [id]
+    );
 
     return rows[0] || null;
   } catch (error) {
-    console.error(
-      "getProfileById Error:",
-      error
-    );
-
+    console.log(error);
     return null;
   }
 }
-
 
 
 export async function getInterestedInMe(

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
+import db from "@/lib/db";
 import { getProfiles, getLikedProfileIds } from "@/services/profile.service";
 import LikeButton from "@/app/components/LikeButton";
 
@@ -29,6 +30,17 @@ export default async function Home() {
     }
   }
 
+
+  let isPremium = false;
+
+if (currentUser) {
+  const [rows] = await db.query(
+    "SELECT is_premium FROM users WHERE id = ?",
+    [currentUser.id]
+  );
+
+  isPremium = rows[0]?.is_premium === 1;
+}
   let likedIds = [];
 
   if (currentUser) {
@@ -154,14 +166,26 @@ export default async function Home() {
                   )}
 
                   <Link
-                    href={currentUser ? "/dashboard/premium" : "/login"}
+                    href={
+                      !currentUser
+                        ? "/login"
+                        : isPremium
+                        ? `/dashboard/messages/${profile.id}`
+                        : "/dashboard/premium"
+                    }
                     className="w-14 h-12 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-blue-50 transition"
                   >
                     <span className="text-2xl">💬</span>
                   </Link>
 
                   <Link
-                    href={currentUser ? "/dashboard/premium" : "/login"}
+                    href={
+                      !currentUser
+                        ? "/login"
+                        : isPremium
+                        ? `/call/${profile.id}`
+                        : "/dashboard/premium"
+                    }
                     className="w-14 h-12 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-green-50 transition"
                   >
                     <span className="text-2xl">📞</span>
