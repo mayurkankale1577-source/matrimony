@@ -27,30 +27,19 @@ body {
 
 
 
-@media print {
+#biodata{
+  width:794px;
+  background:#fff;
+}
 
-  nav,
-  header,
-  footer,
-  button,
-  .print\:hidden {
-    display: none !important;
+#biodata img{
+  max-width:100%;
+}
+
+@media print{
+
+  #biodata{
+      width:794px;
   }
 
-  body {
-    background: white !important;
-  }
-
-  #biodata {
-    width: 210mm;
-    min-height: 297mm;
-    margin: 0 auto;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  @page {
-    size: A4;
-    margin: 10mm;
-  }
 }

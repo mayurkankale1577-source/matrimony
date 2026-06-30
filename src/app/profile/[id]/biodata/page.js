@@ -1,3 +1,4 @@
+ 
 import PrintButton from "@/app/components/PrintButton";
 import { getProfileById } from "@/services/profile.service";
 import Link from "next/link";
