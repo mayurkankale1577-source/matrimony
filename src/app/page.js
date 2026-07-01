@@ -1,3 +1,5 @@
+
+import ProfileFilters from "@/app/components/ProfileFilters";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
@@ -5,11 +7,18 @@ import db from "@/lib/db";
 import { getProfiles, getLikedProfileIds } from "@/services/profile.service";
 import LikeButton from "@/app/components/LikeButton";
 
-export default async function Home() {
+export default async function Home({ searchParams }) {
+  const params = await searchParams;
   let profiles = [];
 
   try {
-    profiles = await getProfiles();
+    const filters = {
+      gender: params.gender || "",
+      
+      district: params.district || "",
+    };
+    
+    profiles = await getProfiles(filters);
   } catch (error) {
     console.error("Profiles Error:", error);
   }
@@ -122,6 +131,7 @@ if (currentUser) {
       {/* Profiles */}
 
       <section className="max-w-6xl mx-auto px-4 py-16">
+      <ProfileFilters />
         <h3 className="text-3xl font-bold mb-8">Latest Profiles</h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

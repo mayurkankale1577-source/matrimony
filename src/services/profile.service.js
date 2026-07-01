@@ -1,32 +1,50 @@
 import db from "@/lib/db";
 
-export async function getProfiles() {
+export async function getProfiles(filters = {}) {
   try {
-    const [rows] = await db.query(`
+    let sql = `
       SELECT
         users.id,
         users.full_name,
         users.gender,
-        profiles.birth_place,
-        profiles.education,
+        profiles.district,
         profiles.occupation,
+        profiles.education,
         photos.image_url
+
       FROM users
+
       INNER JOIN profiles
         ON users.id = profiles.user_id
+
       LEFT JOIN photos
         ON users.id = photos.user_id
         AND photos.is_primary = 1
-      ORDER BY users.id DESC
-    `);
+
+      WHERE 1=1
+    `;
+
+    const params = [];
+
+    if (filters.gender) {
+      sql += ` AND users.gender = ?`;
+      params.push(filters.gender);
+    }
+
+     
+
+    if (filters.district) {
+      sql += ` AND profiles.district = ?`;
+      params.push(filters.district);
+    }
+
+    sql += ` ORDER BY users.id DESC`;
+
+    const [rows] = await db.query(sql, params);
 
     return rows;
   } catch (error) {
-    console.error(
-      "getProfiles Error:",
-      error
-    );
-
+    console.error("getProfiles Error:", error);
     return [];
   }
 }
@@ -156,6 +174,22 @@ export async function getLikedProfileIds(
       error
     );
 
+    return [];
+  }
+}
+export async function getDistricts() {
+  try {
+    const [rows] = await db.query(`
+      SELECT DISTINCT district
+      FROM profiles
+      WHERE district IS NOT NULL
+      AND district <> ''
+      ORDER BY district
+    `);
+
+    return rows;
+  } catch (error) {
+    console.error(error);
     return [];
   }
 }

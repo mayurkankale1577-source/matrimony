@@ -29,6 +29,7 @@ export async function GET() {
    
   profiles.birth_date,
   profiles.birth_place,
+  profiles.district,
   profiles.religion,
   profiles.education,
   profiles.occupation,

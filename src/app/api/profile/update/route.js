@@ -50,6 +50,7 @@ export async function PUT(request) {
     const birth_date = formData.get("birth_date") || null;
 
     const birth_place = formData.get("birth_place");
+    const district = formData.get("district");
 
     const religion = formData.get("religion");
 
@@ -141,6 +142,7 @@ export async function PUT(request) {
   
   birth_date,
   birth_place,
+  district,
   religion,
   education,
   occupation,
@@ -179,7 +181,7 @@ VALUES
   ?, ?,
   ?, ?,
   ?, ?, ?, ?,
-  ?, ?, ?, ?
+  ?, ?, ?, ?,?
 )
         `,
         [
@@ -187,6 +189,7 @@ VALUES
 
           birth_date,
           birth_place,
+          district,
           religion,
           education,
           occupation,
@@ -227,6 +230,7 @@ SET
   
   birth_date = ?,
 birth_place = ?,
+district = ?,
   religion = ?,
   education = ?,
   occupation = ?,
@@ -262,6 +266,7 @@ WHERE user_id = ?
         [
           birth_date,
           birth_place,
+          district,
           religion,
           education,
           occupation,

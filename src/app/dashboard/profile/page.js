@@ -11,6 +11,7 @@ export default function ProfilePage() {
     
     birth_date: "",
     birth_place: "",
+    district:"",
     religion: "",
     education: "",
     occupation: "",
@@ -61,6 +62,7 @@ export default function ProfilePage() {
             ? data.profile.birth_date.split("T")[0]
             : "",
           birth_place: data.profile.birth_place || "",
+          district: data.profile.district || "",
           religion: data.profile.religion || "",
           education: data.profile.education || "",
           occupation: data.profile.occupation || "",
@@ -291,6 +293,20 @@ className="space-y-10"
         value={form.birth_place}
         onChange={handleChange}
         placeholder="जन्म स्थळ"
+        className="w-full border rounded-lg p-3"
+      />
+    </div>
+
+    <div>
+      <label className="font-medium block mb-2">
+      ज़िला
+      </label>
+
+      <input
+        name="district"
+        value={form.district}
+        onChange={handleChange}
+        placeholder="ज़िला"
         className="w-full border rounded-lg p-3"
       />
     </div>
